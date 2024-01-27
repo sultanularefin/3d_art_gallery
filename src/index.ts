@@ -11,11 +11,10 @@ app.listen(port, () => {
 })*/
 
 
-
-
 import express, {Express, NextFunction, Request, response, Response} from 'express';
 // import {Express} from "express";
 import cors from "cors";
+import Download_file_with_curl_test from "./apis/Download_file_with_curl_test";
 
 // const express = require('express')
 const corsOrigin = {
@@ -24,13 +23,14 @@ const corsOrigin = {
     credentials: true,
     optionSuccessStatus: 200
 }
+const PORT = 3000;//process.env.PORT;
+
+const app: Express = express();
 
 
-const index: Express = express();
-
-
-index.set('json spaces', 5);
-index.use(cors(corsOrigin));
+app.set('json spaces', 5);
+app.use(cors(corsOrigin));
+app.use(express.static('public'))
 /*const PORT = process.env.PORT;
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
@@ -38,29 +38,42 @@ const region = process.env.S3_REGION;
 const my_Bucket = process.env.S3_BUCKET;
 
 const bodyParser = require('body-parser');*/
-index.use(express.json());
+app.use(express.json());
 
-index.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 // REQ.BODY WILL WORK NOW AFTER ADDING THE ABOVE 2 LINES  REQ.BODY.BUCKET_NAME:  AREFIN31 , WORKED AFTER ADDDING ABOVE 2 LINES.
 
 // app.use(bodyParser.urlencoded({ extended: false }));
 
 
-const url_2 = require('url');
+// const url_2 = require('url');
 // const querystring = require('querystring');
 // app.use(bodyParser.json());
 
-
-index.get('/', (req: Request, res: Response) => {
+// app.post('/api/upload_store_items_12',With_PutObjectCommand_12);
+app.post('/api/pdf_scrap', Download_file_with_curl_test);
+app.get('/', (req: Request, res: Response) => {
     res.send(`
-    <h2>File Upload With <code>"Node.js"</code></h2>
-    <form action="/api/upload" enctype="multipart/form-data" method="post">
-      <div>Select a file: 
-        <input name="file" type="file"  
+    <h2>Check Links With <code>"Node.js"</code></h2>
+    <form action="/api/pdf_scrap" enctype="application/x-www-form-urlencoded" method="post">
+      <div>Enter Publicly accessible aws file links: 
+        
+        
+        <br/>
+        <br/>
+        <input style="width: 500px" name="link" type="text"  placeholder="Enter Publicly accessible aws file links"
+
 
         />
+        <br/>
+        <br/>
       </div>
-      <input type="submit" value="Upload"  />
+      
+        <br/>
+        <br/>
+      <input type="submit" value="Submit"  />
+             <br/>
+      
     </form>
 
   `);
@@ -90,6 +103,9 @@ index.get('/', (req: Request, res: Response) => {
 });*/
 
 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}.`);
+})
 
 
 
